@@ -18,7 +18,8 @@ function play(e) {
     const computerChoice = getComputerChoice();
     const winner = getWinner(playerChoice, computerChoice);
 
-    console.log(playerChoice, computerChoice, winner)
+    showWinner(winner, computerChoice);
+    
 }
 
 
@@ -50,12 +51,12 @@ function getWinner(p, c) {
             return 'player'
         }
     } else if (p === 'paper') {
-        if (c === 'scissor') {
+        if (c === 'scissors') {
             return 'computer'
         } else {
             return 'player';
         }
-    } else if (p === 'scissor') {
+    } else if (p === 'scissors') {
         if (c === 'rock') {
             return 'computer';
         } else {
@@ -64,8 +65,58 @@ function getWinner(p, c) {
     }
 }
 
+function showWinner(winner, computerChoice) {
+    if(winner === 'player') {
+        // Inc player score
+        scoreboard.player++;
+        // Show modal result
+        result.innerHTML = `
+        <h1 class="text-win">You Win </h1>
+        <i class="fas fa-hand-${computerChoice} fa-10x"></i>
+        <p>Computer Chose <strong>${computerChoice.charAt(0).toUpperCase() + computerChoice.slice(1) }</strong></p>`;
+    } else if ( winner === 'computer') {
+        // Inc player score
+        scoreboard.computer++;
+        // Show modal result
+        result.innerHTML = `
+        <h1 class="text-lose">You Lose </h1>
+        <i class="fas fa-hand-${computerChoice} fa-10x"></i>
+        <p>Computer Chose <strong>${computerChoice.charAt(0).toUpperCase() + computerChoice.slice(1)  }</strong></p>`;
+    } else {
+        result.innerHTML = `
+        <h1>It's A Draw</h1>
+        <i class="fas fa-hand-${computerChoice} fa-10x"></i>
+        <p>Computer Chose <strong>${computerChoice.charAt(0).toUpperCase()  + computerChoice.slice(1) }</strong></p>`;
+    }
+
+    // SHow score
+
+    score.innerHTML = 
+    `<p>Player: ${scoreboard.player}</p>
+     <p>Computer: ${scoreboard.computer}</p>`;
+
+     modal.style.display = 'block';
+}
+
+// Clear modal
+function clearModal(e) {
+    if(e.target == modal) {
+        modal.style.display = 'none';
+    }
+}
+
+// Restart
+
+function restartGame() {
+    scoreboard.player = 0;
+    scoreboard.computer = 0;
+    score.innerHTML = `
+    <p>Player : 0</p>
+    <p>Computer : 0</p>`
+}
 
 // Event listeners
 
 choices.forEach(choice => choice.addEventListener('click', play))
-
+window.addEventListener('click', clearModal);
+restart.addEventListener('click', restartGame);
